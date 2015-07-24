@@ -1,0 +1,90 @@
+<head>
+<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<script type="text/javascript">
+$(function () {
+    var downloads = new Array();   
+    var uploads = new Array();  
+    var pings = new Array();   
+    $.getJSON('/speeds', function(data) {
+
+            // Populate series
+            for (i = 0; i < data.length; i++){
+                downloads.push([Date.parse(data[i].date), data[i].down]);
+                uploads.push([Date.parse(data[i].date), data[i].up]);
+                pings.push([Date.parse(data[i].date), data[i].ping]);
+            }
+            Highcharts.setOptions({
+                global: {
+                    useUTC: false
+                }
+            });
+            $('#container').highcharts({
+                chart: {
+                    type: 'spline'
+                },
+                title: {
+                    text: 'ADSL performance graph'
+                },
+                subtitle: {
+                    text: ''
+                },
+                xAxis: {
+                    type: 'datetime',
+
+                    title: {
+                        text: 'Date'
+                    }
+                },
+                yAxis: [{
+                    title: {
+                        text: 'Speed (Mb)'
+                    },
+                    min: 0
+                },
+                {
+
+                    title: {
+                        text: 'Ping (ms)'
+                    },
+                    min: 0,
+                    opposite: true
+                }],
+                tooltip: {
+                    headerFormat: '<b>{series.name}</b><br>',
+                    pointFormat: '{point.x:%e %b %H:%M}: <b>{point.y:.2f}</b>'
+                },
+
+                plotOptions: {
+                    spline: {
+                        marker: {
+                            enabled: true
+                        }
+                    }
+                },
+
+                series: [{
+                    name: "Download",
+                    data: downloads
+                },{
+                    name: "Upload",
+                    data: uploads
+                },{
+                    name: "Ping",
+                    data: pings,
+                    yAxis:1
+                }]
+            });
+
+    });
+});
+</script>
+</head>
+<body>
+    <div id="container" style="height: 400px"></div>
+</body>
+</html>
