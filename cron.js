@@ -1,6 +1,6 @@
 var CronJob = require('cron').CronJob;
 var exec = require('child_process').exec;
-var cmd = '/usr/bin/speedtest-cli --simple';
+var cmd = '/usr/local/bin/speedtest-cli --simple';
 var mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost/speedtest');
